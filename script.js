@@ -1,5 +1,6 @@
 const display = document.querySelector('#display');
 const currentResult = document.querySelector('#currentResult');
+const caculatorHistory = document.querySelector('.calculatorHistory');
 var firstValue;
 var currentOperator;
 
@@ -29,46 +30,65 @@ function operation(operator){
         // quando não for input
         // innerHTML = substituir todo o conteudo da tag
         // append = adicionar um novo conteudo no final
-        currentResult.innerHTML =display.value;
+        currentResult.innerHTML = display.value;
     }
     firstValue=Number(display.value);
     display.value='';
     currentOperator=operator;
 }
 
+/**
+ * 1. Trazer os valores da conta
+ * 2. Formatar (concatenar) a conta
+ * 3. Mostrar em tela
+ */
+
+function pushToHistory(calculation,result){
+    const p = document.createElement('p')
+    p.innerHTML = calculation
+
+    const p2= document.createElement('p')
+    p2.innerHTML = `=${result}`
+
+    caculatorHistory.prepend(p);
+    caculatorHistory.prepend(p2);
+    // caculatorHistory.innerHTML = `<p>=${result}</p> <p>${calculation}</p> ${caculatorHistory.innerHTML}`;
+}
 
 function resultValue(){
- let secondValue=Number(display.value);
- let result;
+    let secondValue=Number(display.value);
+    let result;
+    let calculation;
 
- switch (currentOperator) {
-    case 'plus':
-        result= firstValue+secondValue;
-        break;
-    case 'minus':
-        result= firstValue-secondValue;
-        break;
-    case 'division':
-        result= firstValue/secondValue;
-         break;
-    case 'multiply':
-        result= firstValue*secondValue;
-        break;
-    case 'percentage':
-        result=(secondValue*100)/firstValue;
-        break;         
-    default:
-    result="resultado invalido";
-        break;
- }
-display.value=result;
+    switch (currentOperator) {
+        case 'plus':
+            result = firstValue+secondValue;
+            calculation = `${firstValue}+${secondValue}`;
+            break;
+        case 'minus':
+            result = firstValue-secondValue;
+            calculation = `${firstValue}-${secondValue}`;
+            break;
+        case 'division':
+            result = firstValue/secondValue;
+            calculation = `${firstValue}/${secondValue}`;
+            break;
+        case 'multiply':
+            result = firstValue*secondValue;
+            calculation = `${firstValue}*${secondValue}`;
+            break;
+        case 'percentage':
+            result = (secondValue*100)/firstValue;
+            calculation = `${firstValue}%${secondValue}`;
+            break;         
+        default:
+        result="resultado invalido";
+            break;
+    }
+    display.value = result;
+    pushToHistory(calculation,result)
 }
-/**
- * Validar nmr
- * Validar o (e)
- * Validar operações
- * 
- */
+
 document.addEventListener('keydown', function(event) {
     // Obtém o código da tecla pressionada
     const key = event.key;
